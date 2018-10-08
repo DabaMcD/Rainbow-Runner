@@ -19,6 +19,7 @@ class GameVals {
     static CommanderVideo cmndrVideo;
 
     // Movement
+    static double g = Constants.blockSize * 0.245;
 
     // Particles
     static ParticleSystem pSys;

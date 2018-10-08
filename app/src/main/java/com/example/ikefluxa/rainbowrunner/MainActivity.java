@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 gameScreen.draw();
+                                Touch.justTouched ++;
                             }
                         });
                         Thread.sleep(bob - System.currentTimeMillis() + 30);
