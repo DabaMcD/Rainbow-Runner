@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class StartButton {
+class StartButton {
     private Vector2 position;
     private int width,
         height,
@@ -14,7 +14,7 @@ public class StartButton {
         strokeColor;
     private Paint paint;
 
-    public StartButton(float x, float y) {
+    StartButton(float x, float y) {
         position = new Vector2(x, y);
         width = 90;
         height = 50;
@@ -25,13 +25,12 @@ public class StartButton {
         paint = new Paint();
     }
 
-    public void update() {
-        int color = Color.rgb(255, 221, 0);
+    void update() {
         if (Touch.x >= position.x - originX && Touch.x < position.x + width - originX && Touch.y >= position.y - originY && Touch.y < position.y + height - originY){
             fillColor = Constants.black;
             strokeColor = Color.rgb(255, 255, 255);
             if (Touch.isTouching){
-                // ResetGame(); // About to define
+                 Constants.ResetGame(); // About to define
             }
         } else {
             fillColor = Color.rgb(255, 255, 255);
@@ -39,7 +38,7 @@ public class StartButton {
         }
     }
 
-    public void draw(Canvas canvas) {
+    void draw(Canvas canvas) {
         // Fill
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(fillColor);
