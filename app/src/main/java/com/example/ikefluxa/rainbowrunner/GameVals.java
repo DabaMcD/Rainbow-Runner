@@ -1,10 +1,13 @@
 package com.example.ikefluxa.rainbowrunner;
 
+import java.util.ArrayList;
+
 class GameVals {
     // General game variables
     static String gameState = GameStates.menu;
     static StartButton startButton;
     static BgText bgText;
+    static ArrayList<Ground> ground;
 
     // Loss
     static int lossTimer = 0;
@@ -19,6 +22,7 @@ class GameVals {
 
     // Particles
     static ParticleSystem pSys;
+    static float pLife = 10 / 8;
 
     // Obstacles
     static ObstacleCollection obstacles;
