@@ -14,6 +14,7 @@ class GameVals {
 
     // Score
     static int score = 0;
+    static int highScore = 0;
 
     // Commander video
     static CommanderVideo cmndrVideo;

@@ -59,7 +59,7 @@ class Constants {
     static void LoseGame() {
         GameVals.cmndrVideo.Kill();
         GameVals.highScore = GameVals.score > GameVals.highScore ? GameVals.score : GameVals.highScore;
-        gameState = GameStates.loss;
+        GameVals.gameState = GameStates.loss;
     }
 
     static void ResetGame() {
@@ -87,7 +87,44 @@ class Constants {
         }
     }
 
-    static boolean Overlap(CollisionRectObj obj1, CollisionRectObj obj2) {
+    static void Collide(CommanderVideo obj1, Ground obj2) {
+        float overlapX;
+        float overlapY;
+        if (obj1.lastPosition.x < obj2.lastPosition.x){
+            overlapX = obj1.position.x + obj1.width - obj2.position.x;
+        } else {
+            overlapX = obj2.position.x + obj2.width - obj1.position.x;
+        }
+        if (obj1.lastPosition.y < obj2.lastPosition.y){
+            overlapY = obj1.position.y + obj1.height - obj2.position.y;
+        } else {
+            overlapY = obj2.position.y + obj2.height - obj1.position.y;
+        }
+
+        if (overlapX < overlapY){
+            // obj1 right of obj2
+            if (obj2.lastPosition.x + obj2.width <= obj1.lastPosition.x && obj2.position.x + obj2.width > obj1.position.x){
+                obj1.position.x += overlapX;
+            }
+            // obj1 left of obj2
+            if (obj1.lastPosition.x + obj1.width <= obj2.lastPosition.x && obj1.position.x + obj1.width > obj2.position.x){
+                obj1.position.x -= overlapX;
+            }
+        }
+        else {
+            // obj1 above obj2
+            if (obj1.lastPosition.y + obj1.height <= obj2.lastPosition.y && obj1.position.y + obj1.height > obj2.position.y){
+                obj1.position.y -= overlapY;
+                obj1.isTouchingBottom = true;
+            }
+            // obj1 below obj2
+            if (obj2.lastPosition.y + obj2.height <= obj1.lastPosition.y && obj2.position.y + obj2.height > obj1.position.y){
+                obj1.position.y += overlapY;
+            }
+        }
+    }
+
+    static boolean Overlap(CommanderVideo obj1, Ground obj2) {
         if (obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
                 obj1.position.y < obj2.position.y + obj2.height &&
@@ -95,7 +132,7 @@ class Constants {
             return true;
         }
         return false;
-    }
+    } // todo: check for occurrences and make multiple functions taking in different types according to the uses
 
     static boolean IsKeyDown(String key) {
         if(Touch.isTouching) {
@@ -143,5 +180,12 @@ class Constants {
         } else {
             return false;
         }
+    }
+
+    static int ColorWithAlpha(int c, int a) {
+        int r = Color.red(c);
+        int g = Color.green(c);
+        int b = Color.blue(c);
+        return Color.argb(r, g, b, a);
     }
 }

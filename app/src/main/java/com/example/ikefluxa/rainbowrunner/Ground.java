@@ -5,9 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 class Ground {
-    private Vector2 position,
+    Vector2 position,
         lastPosition;
-    private float width,
+    float width,
         height;
     private Paint paint;
 

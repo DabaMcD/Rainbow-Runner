@@ -7,19 +7,19 @@ import android.graphics.Paint;
 class CommanderVideo {
     Vector2 position,
             lastPosition;
+    float width,
+            height;
+    boolean isTouchingBottom;
     private boolean isVisible,
             isJumping,
             isSliding,
             isKicking,
             isLaunching,
-            isTouchingBottom,
             isAlive,
             kickKeyHeld,
             lastSliding,
             attractMode;
-    private float width,
-            jumpFrame,
-            height,
+    private float jumpFrame,
             slideHeight,
             kickTimerMax,
             kickTimer,
@@ -31,7 +31,7 @@ class CommanderVideo {
             runFrameIncrement,
             runFrameTimerMax;
     private double velocityY;
-    Paint paint;
+    private Paint paint;
 
     CommanderVideo() {
         position = new Vector2(Screen.width / 2 - 25, Constants.groundHeight - Constants.cmndrSize);
