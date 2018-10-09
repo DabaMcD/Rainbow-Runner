@@ -9,11 +9,11 @@ class CommanderVideo {
             lastPosition;
     float width,
             height;
-    boolean isTouchingBottom;
+    boolean isTouchingBottom,
+            isKicking;
     private boolean isVisible,
             isJumping,
             isSliding,
-            isKicking,
             isLaunching,
             isAlive,
             kickKeyHeld,

@@ -36,8 +36,21 @@ class Constants {
     static final int psSize = 150;
 
     // Obstacles
+    static final ArrayList<String> obstacleTypes = new ArrayList<>(Arrays.asList(
+            "jump",
+            "kick",
+            "slide",
+            "launch"
+    ));
     static final int obstacleSpawnMax = 70;
     static final int obstacleSpawnMin = 22;
+    static final int launchTimerMax = 40;
+    static final ArrayList<Integer> obstacleColors = new ArrayList<>(Arrays.asList(
+            Color.rgb(224, 42, 18),
+            Color.rgb(191, 61, 224),
+            Color.rgb(22, 88, 196),
+            Color.rgb(255, 105, 173)
+    ));
 
     // Gold
 
@@ -134,6 +147,16 @@ class Constants {
         return false;
     } // todo: check for occurrences and make multiple functions taking in different types according to the uses
 
+    static boolean Overlap(Obstacle obj1, CollisionRectObj obj2) {
+        if (obj1.position.x < obj2.position.x + obj2.width &&
+                obj1.position.x + obj1.width > obj2.position.x &&
+                obj1.position.y < obj2.position.y + obj2.height &&
+                obj1.position.y + obj1.height > obj2.position.y){
+            return true;
+        }
+        return false;
+    }
+
     static boolean IsKeyDown(String key) {
         if(Touch.isTouching) {
             if (key.equals("jump")) {
@@ -188,4 +211,11 @@ class Constants {
         int b = Color.blue(c);
         return Color.argb(r, g, b, a);
     }
+
+    static int lerpColor(int a, int b, double phase) {
+        int red = (int) (Color.red(a) * phase + Color.red(b) * (1 - phase));
+        int green = (int) (Color.green(a) * phase + Color.green(b) * (1 - phase));
+        int blue = (int) (Color.blue(a) * phase + Color.blue(b) * (1 - phase));
+        return Color.rgb(red, green, blue);
+    } // todo: a color problem might be here
 }
