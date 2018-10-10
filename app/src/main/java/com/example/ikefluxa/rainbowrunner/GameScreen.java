@@ -2,7 +2,6 @@ package com.example.ikefluxa.rainbowrunner;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -35,11 +34,66 @@ public class GameScreen extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        counter ++;
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setColor(Color.BLUE);
-        paint.setTextSize(Screen.height / 10);
-        canvas.drawText(String.valueOf(counter), Screen.width / 2, Screen.height / 2, paint);
+        paint.setColor(Constants.bgColor);
+        canvas.drawRect(-1, -1, Screen.width + 1, Screen.height + 1, paint);
+        switch(GameVals.gameState){
+            case "menu":
+                // update
+                GameVals.cmndrVideo.Update();
+                GameVals.pSys.Update();
+                GameVals.startButton.Update();
+
+                // draw
+                GameVals.pSys.Draw(canvas);
+                GameVals.cmndrVideo.Draw(canvas);
+                Constants.DrawGround(canvas);
+                Constants.DrawControls(canvas);
+                GameVals.startButton.Draw(canvas);
+                break;
+            case "playing":
+                // update
+                GameVals.score += Constants.scoreIncrement;
+                GameVals.bgText.Update();
+                Constants.UpdateGround();
+                GameVals.cmndrVideo.Update();
+                GameVals.gold.Update();
+                GameVals.obstacles.Update();
+                GameVals.obstacles.CheckCollision();
+                GameVals.pSys.Update();
+
+                // draw
+                GameVals.bgText.Draw(canvas);
+                GameVals.gold.Draw(canvas);
+                GameVals.pSys.Draw(canvas);
+                GameVals.cmndrVideo.Draw(canvas);
+                Constants.DrawGround(canvas);
+                GameVals.obstacles.Draw(canvas);
+                Constants.DrawScore(canvas);
+                if (GameVals.cmndrVideo.isAlive){
+                    GameVals.gold.DrawPSys(canvas);
+                }
+                break;
+            case "loss":
+                // commander video flashes
+                if (GameVals.lossTimer % Math.round(Constants.lossTimerMax / Constants.flashes / 2) == 0){
+                    GameVals.cmndrVideo.isVisible = !GameVals.cmndrVideo.isVisible;
+                }
+                GameVals.lossTimer++;
+
+                // draw
+                GameVals.bgText.Draw(canvas);
+                GameVals.gold.Draw(canvas);
+                GameVals.pSys.Draw(canvas);
+                GameVals.cmndrVideo.Draw(canvas);
+                Constants.DrawGround(canvas);
+                GameVals.obstacles.Draw(canvas);
+                Constants.DrawScore(canvas);
+
+                // end loss state
+                if (GameVals.lossTimer >= Constants.lossTimerMax){
+                    Constants.ResetGame();
+                }
+        }
     }
 
     public void draw() {

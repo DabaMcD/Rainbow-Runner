@@ -11,11 +11,10 @@ class CommanderVideo {
             height;
     boolean isTouchingBottom,
             isKicking;
-    private boolean isVisible,
-            isJumping,
+    boolean isVisible, isAlive;
+    private boolean isJumping,
             isSliding,
             isLaunching,
-            isAlive,
             kickKeyHeld,
             lastSliding,
             attractMode;

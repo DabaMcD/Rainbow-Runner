@@ -1,6 +1,9 @@
 package com.example.ikefluxa.rainbowrunner;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,10 +12,15 @@ class Constants {
     static final int black = Color.rgb(16, 9, 20);
     static final int bgColor = Color.rgb(174, 231, 245);
     static final int groundHeight = Math.round((Screen.height / 4) * 3);
+    static final int scoreTextSize = 22;
+    static final int ctrlTextSize = 18;
 
     // Loss
+    static final int lossTimerMax = 60;
+    static final int flashes = 4;
 
     // Score
+    static final float scoreIncrement = 1 / 50;
 
     // Commander video
     static final int cmndrSize = 150;
@@ -54,6 +62,9 @@ class Constants {
 
     // Gold
     static final int goldPoints = 100;
+
+    // Other
+    private static Paint paint = new Paint();
 
     static void InitializeGame() {
         GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6);
@@ -230,4 +241,53 @@ class Constants {
         int blue = (int) (Color.blue(a) * phase + Color.blue(b) * (1 - phase));
         return Color.rgb(red, green, blue);
     } // todo: a color problem might be here
+    static void UpdateGround() {
+        for (int i = GameVals.ground.size() - 1; i >= 0 ; i--){
+            Ground g = GameVals.ground.get(i);
+            g.Update();
+            // remove offscreen
+            if (g.position.x + g.width < 0){
+                GameVals.ground.remove(i);
+            }
+        }
+    }
+    static void DrawGround(Canvas canvas) {
+        for (int i = 0; i < GameVals.ground.size(); i++){
+            GameVals.ground.get(i).Draw(canvas);
+        }
+    }
+    static void DrawScore(Canvas canvas) {
+        // draw score
+        paint.setTextSize(scoreTextSize);
+        String txt;
+        float x, y;
+        paint.setColor(Color.rgb(255, 255, 255));
+        paint.setStrokeWidth(4);
+        // score
+        x = 10;
+        y = Screen.height - 25;
+        paint.setTextAlign(Paint.Align.LEFT);
+        txt = "Score: " + Math.round(GameVals.score);
+        canvas.drawText(txt, x, y, paint);
+        // high score
+        paint.setTextAlign(Paint.Align.RIGHT);
+        txt = "High Score: " + Math.round(GameVals.highScore);
+        x = Screen.width - 10 - paint.measureText(txt);
+        canvas.drawText(txt, x, y, paint);
+    }
+    static void DrawControls(Canvas canvas) {
+//        int txtSize = ctrlTextSize;
+//        float x, y, txtWidth;
+//        String txt, ctrlTxt;
+//        int bufferX = 10;
+//        int bufferY = 18;
+//        int obIndex = 0;
+//        int ctrlOffset = 11;
+//        int rectOffsetX = 8;
+//        int rectOffsetY = 5;
+//        paint.setTextAlign(Paint.Align.LEFT);
+//        paint.setTextSize(txtSize);
+
+        // todo: draw controls here
+    }
 }

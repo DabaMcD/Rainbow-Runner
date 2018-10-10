@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Constants.InitializeGame();
+
         setScreenDims();
         gameScreen = findViewById(R.id.gameScreen);
         Touch.setTouchListener(gameScreen);

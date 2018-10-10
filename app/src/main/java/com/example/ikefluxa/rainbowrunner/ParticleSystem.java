@@ -28,11 +28,13 @@ class ParticleSystem {
     void Reset() {
         // initialize particles
         for (int i = 0; i < pColors.size(); i++){
-            particles.remove(i);
+            if(particles.size() > i) {
+                particles.remove(i);
+            }
             particles.add(i, new ArrayList<Particle>());
         }
     }
-    void Update(float x, float y, float size) {
+    void Update() {
         float growth = Constants.blockSize * 4;
         if (size < parent.height){
             size += growth;
@@ -46,7 +48,7 @@ class ParticleSystem {
             }
         }
         position.x = parent.position.x;
-        position.y = parent.position.y + parent.height - size;
+        position.y = (float) (parent.position.y + parent.height - size);
 
         // update each particle's life
         for (int i = 0; i < particles.size(); i++){

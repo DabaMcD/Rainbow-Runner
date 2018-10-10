@@ -25,7 +25,7 @@ class StartButton {
         paint = new Paint();
     }
 
-    void update() {
+    void Update() {
         if (Touch.x >= position.x - originX && Touch.x < position.x + width - originX && Touch.y >= position.y - originY && Touch.y < position.y + height - originY){
             fillColor = Constants.black;
             strokeColor = Color.rgb(255, 255, 255);
@@ -38,7 +38,7 @@ class StartButton {
         }
     }
 
-    void draw(Canvas canvas) {
+    void Draw(Canvas canvas) {
         // Fill
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(fillColor);
