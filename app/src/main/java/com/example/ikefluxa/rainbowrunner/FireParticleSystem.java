@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 
 class FireParticleSystem {
-    private Obstacle parent;
+    public Obstacle parent;
     private ArrayList<FireParticle> particles;
     private Vector2 position;
     private double pSize;

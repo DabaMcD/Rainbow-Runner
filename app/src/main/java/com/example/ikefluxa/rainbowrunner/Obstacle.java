@@ -8,7 +8,7 @@ class Obstacle {
     double width, 
             height;
     Vector2 position;
-    private int color;
+    int color;
     private Paint paint;
     
     Obstacle(int t) {

@@ -216,8 +216,8 @@ class CommanderVideo {
         // collision rect
         CollisionRectObj cr = CollisionRect();
         testColor = Color.argb(125, 255, 0, 0);
-        for (int i = 0; i < GameVals.obstacles.obstacles.length; i++){
-            if (Constants.Overlap(cr, GameVals.obstacles.obstacles[i])){
+        for (int i = 0; i < GameVals.obstacles.obstacles.size(); i++){
+            if (Constants.Overlap(cr, GameVals.obstacles.obstacles.get(i))){
                 testColor = Color.argb(125, 0, 255, 0);
             }
         }
@@ -228,8 +228,8 @@ class CommanderVideo {
         if (isKicking){
             CollisionRectObj kr = KickRect();
             testColor = Color.argb(125, 255, 0, 0);
-            for (int i = 0; i < obstacles.length; i++){
-                if (Constants.Overlap(kr, obstacles[i])){
+            for (int i = 0; i < GameVals.obstacles.obstacles.size(); i++){
+                if (Constants.Overlap(kr, GameVals.obstacles.obstacles.get(i))){
                     testColor = Color.argb(125, 0, 255, 0);
                 }
             }

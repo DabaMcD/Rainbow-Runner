@@ -53,6 +53,7 @@ class Constants {
     ));
 
     // Gold
+    static final int goldPoints = 100;
 
     static void InitializeGame() {
         GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6);
@@ -63,18 +64,15 @@ class Constants {
         GameVals.gold = new GoldCollection();
         GameVals.bgText = new BgText();
     }
-
     private static void InitializeGround() {
         GameVals.ground = new ArrayList<>();
         GameVals.ground.add(new Ground(0, Screen.width + GameVals.obstacleSpawnInterval * moveSpeedX));
     }
-
     static void LoseGame() {
         GameVals.cmndrVideo.Kill();
         GameVals.highScore = GameVals.score > GameVals.highScore ? GameVals.score : GameVals.highScore;
         GameVals.gameState = GameStates.loss;
     }
-
     static void ResetGame() {
         GameVals.score = 0;
         GameVals.lossTimer = 0;
@@ -89,7 +87,6 @@ class Constants {
         GameVals.bgText.Reset();
         GameVals.gameState = GameStates.playing;
     }
-
     static void CheckGroundCollision() {
         for (int i = 0; i < GameVals.ground.size(); i++){
             Ground grnd = GameVals.ground.get(i);
@@ -99,7 +96,6 @@ class Constants {
             }
         }
     }
-
     static void Collide(CommanderVideo obj1, Ground obj2) {
         float overlapX;
         float overlapY;
@@ -136,7 +132,6 @@ class Constants {
             }
         }
     }
-
     static boolean Overlap(CommanderVideo obj1, Ground obj2) {
         if (obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
@@ -146,7 +141,6 @@ class Constants {
         }
         return false;
     } // todo: check for occurrences and make multiple functions taking in different types according to the uses
-
     static boolean Overlap(Obstacle obj1, CollisionRectObj obj2) {
         if (obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
@@ -156,7 +150,28 @@ class Constants {
         }
         return false;
     }
-
+    static boolean Overlap(CollisionRectObj obj1, Obstacle obj2) {
+        if (obj1.position.x < obj2.position.x + obj2.width &&
+                obj1.position.x + obj1.width > obj2.position.x &&
+                obj1.position.y < obj2.position.y + obj2.height &&
+                obj1.position.y + obj1.height > obj2.position.y){
+            return true;
+        }
+        return false;
+    }
+    static boolean Overlap(CollisionRectObj obj1, CollisionRectObj obj2) {
+        if (obj1.position.x < obj2.position.x + obj2.width &&
+                obj1.position.x + obj1.width > obj2.position.x &&
+                obj1.position.y < obj2.position.y + obj2.height &&
+                obj1.position.y + obj1.height > obj2.position.y){
+            return true;
+        }
+        return false;
+    }
+    static boolean CheckBounds(GoldParticle obj) {
+        return (obj.position.x + obj.width < 0 || obj.position.x > Screen.width ||
+                obj.position.y + obj.height < 0 || obj.position.y > Screen.height);
+    }
     static boolean IsKeyDown(String key) {
         if(Touch.isTouching) {
             if (key.equals("jump")) {
@@ -180,7 +195,6 @@ class Constants {
             return false;
         }
     }
-
     static boolean IsKeyPressed(String key) {
         if(Touch.isTouching && Touch.justTouched < 2) {
             if (key.equals("jump")) {
@@ -204,14 +218,12 @@ class Constants {
             return false;
         }
     }
-
     static int ColorWithAlpha(int c, int a) {
         int r = Color.red(c);
         int g = Color.green(c);
         int b = Color.blue(c);
         return Color.argb(r, g, b, a);
     }
-
     static int lerpColor(int a, int b, double phase) {
         int red = (int) (Color.red(a) * phase + Color.red(b) * (1 - phase));
         int green = (int) (Color.green(a) * phase + Color.green(b) * (1 - phase));

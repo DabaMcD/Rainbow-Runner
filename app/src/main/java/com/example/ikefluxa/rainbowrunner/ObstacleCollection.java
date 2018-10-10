@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 
 class ObstacleCollection {
-    private ArrayList<Obstacle> obstacles;
+    ArrayList<Obstacle> obstacles;
     private ArrayList<FireParticleSystem> pSystems;
     private ArrayList<Triangle> debris;
     
@@ -21,7 +21,7 @@ class ObstacleCollection {
     }
 	void SpawnDebris(Obstacle rect, CollisionRectObj kickRect) {
         float x = rect.position.x;
-        float x2 = rect.position.x + rect.width;
+        float x2 = (float) (rect.position.x + rect.width);
         float y = kickRect.position.y + kickRect.height/2;
         float breakDist;
         double min = 1.0;
@@ -32,41 +32,41 @@ class ObstacleCollection {
         double farRot = 0.055;
 
         // top left
-        breakDist = (float) (Math.random() * (max - min) + min)
+        breakDist = (float) (Math.random() * (max - min) + min);
         debris.add(
                 new Triangle(
                         new Vector2(rect.position.x - breakDist, rect.position.y - breakDist),
-                        new Vector2(rect.position.x + rect.width - breakDist, rect.position.y - breakDist),
+                        new Vector2((float) (rect.position.x + rect.width - breakDist), rect.position.y - breakDist),
                         new Vector2(x - breakDist, y - breakDist),
                         new Vector2((float) (Constants.moveSpeedX * scaleX * closeScaleX), 0),
                         -Math.PI * closeRot,
                         rect.color));
         // top right
-        breakDist = (float) (Math.random() * (max - min) + min)
+        breakDist = (float) (Math.random() * (max - min) + min);
         debris.add(
                 new Triangle(
-                        new Vector2(rect.position.x + rect.width + breakDist, rect.position.y - breakDist),
+                        new Vector2((float) (rect.position.x + rect.width + breakDist), rect.position.y - breakDist),
                         new Vector2(x + breakDist, y - breakDist),
                         new Vector2(x2 + breakDist, y - breakDist),
                         new Vector2((float) (Constants.moveSpeedX * scaleX), 0),
                         -Math.PI * farRot,
                         rect.color));
         // bottom right
-        breakDist = (float) (Math.random() * (max - min) + min)
+        breakDist = (float) (Math.random() * (max - min) + min);
         debris.add(
                 new Triangle(
                         new Vector2(x + breakDist, y + breakDist),
                         new Vector2(x2 + breakDist, y + breakDist),
-                        new Vector2(rect.position.x + rect.width + breakDist, rect.position.y + rect.height + breakDist),
+                        new Vector2((float) (rect.position.x + rect.width + breakDist), (float) (rect.position.y + rect.height + breakDist)),
                         new Vector2((float) (Constants.moveSpeedX * scaleX), 0),
                         Math.PI * farRot,
                         rect.color));
         // bottom left
-        breakDist = (float) (Math.random() * (max - min) + min)
+        breakDist = (float) (Math.random() * (max - min) + min);
         debris.add(
                 new Triangle(
-                        new Vector2(rect.position.x - breakDist, rect.position.y + rect.height + breakDist),
-                        new Vector2(rect.position.x + rect.width - breakDist, rect.position.y + rect.height + breakDist),
+                        new Vector2(rect.position.x - breakDist, (float) (rect.position.y + rect.height + breakDist)),
+                        new Vector2((float) (rect.position.x + rect.width - breakDist), (float) (rect.position.y + rect.height + breakDist)),
                         new Vector2(x - breakDist, y + breakDist),
                         new Vector2((float) (Constants.moveSpeedX * scaleX * closeScaleX), 0),
                         Math.PI * closeRot,
@@ -89,7 +89,7 @@ class ObstacleCollection {
             // collision, change game state to loss
             else {
                 // kick check
-                if (c.isKicking && Constants.obstacleTypes[o.type] == "kick" && Constants.Overlap(o, c.KickRect())) {
+                if (c.isKicking && Constants.obstacleTypes.get(o.type).equals("kick") && Constants.Overlap(o, c.KickRect())) {
                     Obstacle temporaryObstacle = obstacles.get(i);
                     obstacles.remove(i);
                     SpawnDebris(temporaryObstacle, c.KickRect());
@@ -124,7 +124,7 @@ class ObstacleCollection {
         if (GameVals.obstacleTimer >= GameVals.obstacleSpawnInterval) {
             GameVals.obstacleTimer = 0;
             if (GameVals.obstacleSpawnInterval > Constants.obstacleSpawnMin) {
-                GameVals.obstacleSpawnInterval--;
+                GameVals.obstacleSpawnInterval --;
             }
             // pick obstacle type
             // spawn launches less frequently
@@ -147,7 +147,7 @@ class ObstacleCollection {
             if (Constants.obstacleTypes.get(obIndex).equals("launch")) {
                 // ground
                 GameVals.launchTimer = Constants.launchTimerMax;
-                GameVals.ground.add(new Ground(Screen.width, o.width * 2));
+                GameVals.ground.add(new Ground(Screen.width, (int) (o.width * 2)));
                 GameVals.ground.add(new Ground(Screen.width + Constants.launchTimerMax * Constants.moveSpeedX, GameVals.obstacleSpawnInterval * Constants.moveSpeedX));
                 // gold
                 if (Math.random() < 0.5) {
@@ -158,25 +158,22 @@ class ObstacleCollection {
                 // gold
                 if (Math.random() < 0.33) {
                     o = obstacles.get(obstacles.size() - 1);
-                    Gold g = new Gold(o.position.x + o.width, Constants.groundHeight - Constants.cmndrSize);
-                    float offset = (Constants.obstacleSpawnMin * Constants.moveSpeedX - o.width - g.width) / 2;
+                    Gold g = new Gold((float) (o.position.x + o.width), Constants.groundHeight - Constants.cmndrSize);
+                    float offset = (float) ((Constants.obstacleSpawnMin * Constants.moveSpeedX - o.width - g.width) / 2);
                     g.position.x += offset;
                     GameVals.gold.Add(g);
                 }
             }
             else if (Constants.obstacleTypes.get(obIndex).equals("jump")) {
-                pSystems.add(new FireParticleSystem(o.position.x, o.position.y, o.width, o));
+                pSystems.add(new FireParticleSystem(o.position.x, o.position.y, (float) o.width, o));
                 // prime the fire/generate particles
-                for (i = 0; i < 10; i++) {
+                for (int i = 0; i < 10; i++) {
                     pSystems.get(pSystems.size() - 1).Update();
                 }
             }
-            else if (Constants.obstacleTypes.get(obIndex).equals("kick")) {
-
-            }
             // ground for non launch obstacles
             if (!Constants.obstacleTypes.get(obIndex).equals("launch")) {
-                ground.add(new Ground(Screen.width, GameVals.obstacleSpawnInterval * Constants.moveSpeedX));
+                GameVals.ground.add(new Ground(Screen.width, GameVals.obstacleSpawnInterval * Constants.moveSpeedX));
             }
         }
 
@@ -192,7 +189,7 @@ class ObstacleCollection {
         
         // update debris	
         for (int i = debris.size() - 1; i >= 0; i--) {
-            Debris d = debris.get(i);
+            Triangle d = debris.get(i);
             d.Update();
             // remove offscreen debris
             if (d.points.get(0).x > Screen.width * 2) {
@@ -200,7 +197,6 @@ class ObstacleCollection {
             }
         }
     }
-	
 	void Draw(Canvas canvas) {
         // draw particle systems
         for (int i = 0; i < pSystems.size(); i++) {
