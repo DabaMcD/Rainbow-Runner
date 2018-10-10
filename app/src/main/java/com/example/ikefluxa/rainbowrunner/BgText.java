@@ -1,54 +1,71 @@
 package com.example.ikefluxa.rainbowrunner;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static com.example.ikefluxa.rainbowrunner.GameVals.obstacleSpawnInterval;
 
 class BgText {
     private int txtSize,
             colorIndex,
-            baseVelocityX,
-            txtWidth,
             counter,
             counterMax;
+    private double baseVelocityX,
+            txtWidth;
     private boolean max,
             isVisible;
-    private String startText, maxText, txt;
+    private String startText,
+            maxText,
+            txt;
+    private Vector2 position,
+            velocity;
+    private ArrayList<Integer> colors;
+    private Paint paint;
+
     BgText() {
-        txtSize = height / 2;
-        position = new Vector2(width, height / 2 - txtSize / 2);
-        colors = [color(255, 160, 80, 150), color(255, 140, 170, 150), color(245, 220, 90, 150)];
+        txtSize = Screen.height / 2;
+        position = new Vector2(Screen.width, Screen.height / 2 - txtSize / 2);
+        colors = new ArrayList<>(Arrays.asList(
+                Color.argb(150, 255, 160, 80),
+                Color.argb(150, 255, 140, 170),
+                Color.argb(150, 245, 220, 90)
+        ));
         colorIndex = 0;
         max = false; // at max level
         startText = "BEGIN";
         maxText = "MAX LEVEL";
         txt = startText;
         baseVelocityX = Constants.moveSpeedX * 0.65;
-        velocity = new Vector2(baseVelocityX, 0);
-        paint = new Paint;
-        paint.setTextSize(txtSize)
-        txtWidth = textWidth(txt);
+        velocity = new Vector2((float) baseVelocityX, 0);
+        paint = new Paint();
+        paint.setTextSize(txtSize);
+        txtWidth = paint.measureText(txt);
         isVisible = true;
         counter = 0;
         counterMax = 40;
     }
-    Reset = function(){
-        position = new Vector2(width, height/2 - txtSize/2);
-        velocity = new Vector2(baseVelocityX, 0);
-        textSize(txtSize);
+    void Reset() {
+        position = new Vector2(Screen.width, Screen.height/2 - txtSize/2);
+        velocity = new Vector2((float) baseVelocityX, 0);
+        paint.setTextSize(txtSize);
         txt = startText;
-        txtWidth = textWidth(txt);
+        txtWidth = paint.measureText(txt);
         isVisible = true;
         max = false;
-    };
-    
-    Update = function(){
+    }
+    void Update() {
         // movement
-        if (!max && obstacleSpawnInterval === obstacleSpawnMin){
+        if (!max && obstacleSpawnInterval == Constants.obstacleSpawnMin){
             max = true;
-            position.x = width;
+            position.x = Screen.width;
             txt = maxText;
-            textSize(txtSize);
-            txtWidth = textWidth(txt);
-            velocity.x = baseVelocityX;
+            paint.setTextSize(txtSize);
+            txtWidth = paint.measureText(txt);
+            velocity.x = (float) baseVelocityX;
             isVisible = true;
         }
         position.Sub(velocity);
@@ -61,19 +78,17 @@ class BgText {
         counter++;
         if (counter >= counterMax){
             counter = 0;
-            colorIndex = (colorIndex + 1) % colors.length;
+            colorIndex = (colorIndex + 1) % colors.size();
         }
-    };
-    
-    Draw = function(){
+    }
+    void Draw(Canvas canvas) {
         if (!isVisible){
             return;
         }
-        var c = lerpColor(colors[colorIndex], colors[(colorIndex + 1) % colors.length], counter/counterMax);
-        fill(c);
-        noStroke();
-        textSize(txtSize);
-        textAlign(LEFT, TOP);
-        text(txt, position.x, position.y);
-    };
+        int c = Constants.lerpColor(colors.get(colorIndex), colors.get((colorIndex + 1) % colors.size()), counter/counterMax);
+        paint.setColor(c);
+        paint.setTextSize(txtSize);
+        paint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText(txt, position.x, position.y - paint.getTextSize() * 5 / 6, paint); // todo: big text may not be vertically aligned
+    }
 }
