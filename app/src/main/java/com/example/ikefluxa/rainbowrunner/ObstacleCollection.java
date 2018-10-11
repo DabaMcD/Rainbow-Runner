@@ -151,7 +151,7 @@ class ObstacleCollection {
                 GameVals.ground.add(new Ground(Screen.width + Constants.launchTimerMax * Constants.moveSpeedX, GameVals.obstacleSpawnInterval * Constants.moveSpeedX));
                 // gold
                 if (Math.random() < 0.5) {
-                    GameVals.gold.Add(new Gold(Screen.width + Constants.moveSpeedX * Constants.launchTimerMax / 2, 0));
+                    GameVals.gold.Add(new Gold(Screen.width + Constants.moveSpeedX * Constants.launchTimerMax / 2, Constants.groundHeight - Constants.cmndrSize * 7 / 4));
                 }
             }
             else if (Constants.obstacleTypes.get(obIndex).equals("slide")) {
