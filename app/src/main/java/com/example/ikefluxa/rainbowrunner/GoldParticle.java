@@ -30,6 +30,6 @@ class GoldParticle {
     }
     void Draw(Canvas canvas) {
         paint.setColor(fillColor);
-        canvas.drawRect(position.x, position.y, (float) width, (float) height, paint);
+        canvas.drawRect(position.x, position.y, (float) width + position.x, (float) height + position.y, paint);
     }
 }

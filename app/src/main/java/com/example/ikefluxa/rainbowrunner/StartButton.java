@@ -24,7 +24,6 @@ class StartButton {
         strokeColor = Color.rgb(255, 0, 0);
         paint = new Paint();
     }
-
     void Update() {
         if (Touch.x >= position.x - originX && Touch.x < position.x + width - originX && Touch.y >= position.y - originY && Touch.y < position.y + height - originY){
             fillColor = Constants.black;
@@ -37,24 +36,23 @@ class StartButton {
             strokeColor = Constants.black;
         }
     }
-
     void Draw(Canvas canvas) {
         // Fill
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(fillColor);
-        canvas.drawRect(position.x - originX, position.y - originY, width, height, paint);
+        canvas.drawRect(position.x - originX, position.y - originY, width + position.x - originX, height + position.y - originY, paint);
 
         // Stroke
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(strokeColor);
         paint.setStrokeWidth(8);
-        canvas.drawRect(position.x - originX, position.y - originY, width, height, paint);
+        canvas.drawRect(position.x - originX, position.y - originY, width + position.x - originX, height + position.y - originY, paint);
 
         // Text
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(strokeColor);
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("Start", position.x, position.y - paint.getTextSize(), paint);
+        canvas.drawText("Start", position.x, position.y + paint.getTextSize() / 3, paint);
     }
 }

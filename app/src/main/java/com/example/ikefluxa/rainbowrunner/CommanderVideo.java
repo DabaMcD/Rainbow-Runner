@@ -21,15 +21,15 @@ class CommanderVideo {
     private float jumpFrame,
             slideHeight,
             kickTimerMax,
-            kickTimer,
-            heightScale;
+            kickTimer;
     private int runFrame,
             testColor,
             totalRunFrames,
             runFrameTimer,
             runFrameIncrement,
             runFrameTimerMax;
-    private double velocityY;
+    private double velocityY,
+            heightScale;
     private Paint paint;
 
     CommanderVideo() {
@@ -50,7 +50,7 @@ class CommanderVideo {
         kickKeyHeld = false;
         isLaunching = false;
         testColor = Color.rgb(255, 0, 0);
-        heightScale = 11 / 15; // pct of height that is body
+        heightScale = 11d / 15d; // pct of height that is body
         runFrame = 0;
         totalRunFrames = 7;
         runFrameTimer = 0;
@@ -189,12 +189,10 @@ class CommanderVideo {
 
         // slide position correction
         if (isSliding && !lastSliding){
-            //position.x -= width/2;
             position.y += height - slideHeight;
             height = slideHeight;
         } else if (!isSliding && lastSliding){
-            //position.x += width/2;
-            position.y -= Constants.cmndrSize - slideHeight + GameVals.g; // ?add g
+            position.y -= Constants.cmndrSize - slideHeight + GameVals.g;
             height = Constants.cmndrSize;
         }
 
@@ -221,7 +219,7 @@ class CommanderVideo {
             }
         }
         paint.setColor(testColor);
-        canvas.drawRect(cr.position.x, cr.position.y, cr.width, cr.height, paint);
+        canvas.drawRect(cr.position.x, cr.position.y, cr.width + cr.position.x, cr.height + cr.position.y, paint);
 
         // kick rect
         if (isKicking){
@@ -233,70 +231,70 @@ class CommanderVideo {
                 }
             }
             paint.setColor(testColor);
-            canvas.drawRect(kr.position.x, kr.position.y, kr.width, kr.height, paint);
+            canvas.drawRect(kr.position.x, kr.position.y, kr.width + kr.position.x, kr.height + kr.position.y, paint);
         }
     }
     void DrawEyeSlot(Canvas canvas) {
         paint.setColor(Color.rgb(255, 255, 255));
         float x = position.x + Constants.blockSize * 2;
         float y = position.y + Constants.blockSize;
-        canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+        canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
     }
     void Draw(Canvas canvas) {
         if (!isVisible){return;}
         paint.setColor(Constants.black);
-        float h = height * heightScale;
+        float h = (float) (height * heightScale);
         float w2, h2, x, y;
 
         if (!isAlive){
             // left arm
             x = position.x - Constants.blockSize;
             y = position.y + Constants.blockSize * 8;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // right arm
             x = position.x + width;
             y = position.y + Constants.blockSize * 8;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
 
             // left leg
             x = position.x + Constants.blockSize;
             y = position.y + h;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
             // right leg
             x = position.x + width - Constants.blockSize * 2;
             y = position.y + h;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize*2, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
             // body
-            canvas.drawRect(position.x, position.y, width, h, paint);
+            canvas.drawRect(position.x, position.y, width + position.x, h + position.y, paint);
 
             // eye slot
             DrawEyeSlot(canvas);
@@ -307,43 +305,43 @@ class CommanderVideo {
             // left arm
             x = position.x - Constants.blockSize;
             y = position.y + height - Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y -= Constants.blockSize*2;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
 
             // right arm
             x = position.x + width + Constants.blockSize * 2;
             y = position.y;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // head
             y = position.y;
-            canvas.drawRect(position.x, y, width, height, paint);
+            canvas.drawRect(position.x, y, width + position.x, height + y, paint);
 
             // body
             x = position.x + width;
             y = position.y + height - h2;
-            canvas.drawRect(x, y, w2, h2, paint);
+            canvas.drawRect(x, y, w2 + x, h2 + y, paint);
 
             // left leg (upper)
             x = position.x + width + w2;
             y = position.y + height - h2 - Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize * 3, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 3 + x, Constants.blockSize + y, paint);
             x += Constants.blockSize * 2;
             y -= Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // right leg
             x = position.x + width + w2;
             y = position.y + height - Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize * 5, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 5 + x, Constants.blockSize + y, paint);
             x += Constants.blockSize*4;
             y -= Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // eye slot
             DrawEyeSlot(canvas);
@@ -352,35 +350,35 @@ class CommanderVideo {
             // left arm
             x = position.x - Constants.blockSize * 3;
             y = position.y + Constants.blockSize * 6;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // right arm
             x += width + Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
             // left leg
             x = position.x;
             y = position.y + h;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize * 3, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 3 + x, Constants.blockSize + y, paint);
 
             // right leg
             x = position.x + width;
             y = position.y + h - Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize * 5, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize * 5 + x, Constants.blockSize + y, paint);
             x += Constants.blockSize * 4;
             y -= Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // body
-            canvas.drawRect(position.x, position.y, width, h, paint);
+            canvas.drawRect(position.x, position.y, width + position.x, h + position.y, paint);
 
             // eye slot
             DrawEyeSlot(canvas);
@@ -389,92 +387,92 @@ class CommanderVideo {
             // left arm
             x = position.x - Constants.blockSize;
             y = position.y + height - Constants.blockSize * 9;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // right arm
             x = position.x + width;
             y = position.y + height  - Constants.blockSize * 12;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y -= Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x += Constants.blockSize;
             y -= Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // left leg
             x = position.x - Constants.blockSize;
             y = position.y + h;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // right leg
             x = position.x + width - Constants.blockSize * 2;
             y = position.y + h;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
             x -= Constants.blockSize;
             y += Constants.blockSize;
-            canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+            canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
             // body
-            canvas.drawRect(position.x, position.y, width, h, paint);
+            canvas.drawRect(position.x, position.y, width + position.x, h + position.y, paint);
 
             // eye slot
             DrawEyeSlot(canvas);
         }
         else if (isJumping) {
-            switch((int) jumpFrame){ // todo: error may be here
+            switch((int) jumpFrame){
                 case 0:
                     // left arm
                     x = position.x - Constants.blockSize * 3;
                     y = position.y + height - Constants.blockSize * 8;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // right arm
                     x += width + Constants.blockSize * 2;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 3, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 3 + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize * 3;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width - Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 3, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 3 + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize * 3;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
+                    canvas.drawRect(position.x, position.y, width + position.x, h + position.y, paint);
 
                     // eye slot
                     DrawEyeSlot(canvas);
@@ -483,33 +481,33 @@ class CommanderVideo {
                     // left arm
                     x = position.x - Constants.blockSize * 3;
                     y = position.y + height - Constants.blockSize * 11;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize * 2;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right arm
                     x += width + Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x + Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 3, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 3 + y, paint);
 
                     // right leg
                     x = position.x + width - Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize*2;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
 
                     // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
+                    canvas.drawRect(position.x, position.y, width + position.x, h + position.y, paint);
 
                     // eye slot
                     DrawEyeSlot(canvas);
@@ -517,305 +515,269 @@ class CommanderVideo {
             }
         }
         else if (IsRunning()){
-            //runFrame = 0; // debug frame
+            // debug frame
             switch(runFrame){
                 case 0:
                     // right arm
                     x = position.x + width;
                     y = position.y + height - Constants.blockSize * 6;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x + Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize * 2;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
 
                     // right leg
                     x = position.x + width - Constants.blockSize * 2;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 4, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 4 + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize * 3;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     break;
                 case 1:
                     // left arm
                     x = position.x - Constants.blockSize;
                     y = position.y + Constants.blockSize * 5;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x + Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize*2;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width - Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize * 2;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     break;
                 case 2:
                     // left arm
                     x = position.x - Constants.blockSize;
                     y = position.y + Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right arm
                     x = position.x + width;
                     y += Constants.blockSize * 2;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x - Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     break;
                 case 3:
                     // left arm
                     x = position.x - Constants.blockSize;
                     y = position.y + Constants.blockSize * 2;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right arm
                     x = position.x + width;
                     y = position.y + Constants.blockSize * 6;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x - Constants.blockSize * 3;
                     y = position.y + h - Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 3, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 3 + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 3, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 3 + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize*3;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     break;
                 case 4:
                     // left arm
                     x = position.x - Constants.blockSize * 3;
                     y = position.y + Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // right arm
                     x = position.x + width;
                     y = position.y + h - Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize * 2;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x - Constants.blockSize;
                     y = position.y + h - Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     break;
                 case 5:
                     // left arm
                     x = position.x - Constants.blockSize * 2;
                     y = position.y + Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
                     x += Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right arm
                     x = position.x + width;
                     y = position.y + h - Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x - Constants.blockSize * 2;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize;
                     y -= Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width - Constants.blockSize;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     break;
                 case 6:
                     // left arm
                     x = position.x - Constants.blockSize;
                     y = position.y + Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 3, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 3 + y, paint);
 
                     // right arm
                     x = position.x + width;
                     y += Constants.blockSize * 4;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // left leg
                     x = position.x;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x -= Constants.blockSize * 3;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize * 3, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize * 3 + x, Constants.blockSize + y, paint);
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
 
                     // right leg
                     x = position.x + width - Constants.blockSize * 2;
                     y = position.y + h;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize + y, paint);
                     x += Constants.blockSize;
                     y += Constants.blockSize;
-                    canvas.drawRect(x, y, Constants.blockSize, Constants.blockSize * 2, paint);
+                    canvas.drawRect(x, y, Constants.blockSize + x, Constants.blockSize * 2 + y, paint);
                     y += Constants.blockSize * 2;
-                    canvas.drawRect(x, y, Constants.blockSize * 2, Constants.blockSize, paint);
-
-                    // body
-                    canvas.drawRect(position.x, position.y, width, h, paint);
-
-                    // eye slot
-                    DrawEyeSlot(canvas);
+                    canvas.drawRect(x, y, Constants.blockSize * 2 + x, Constants.blockSize + y, paint);
                     break;
             }
+
+            // body
+            canvas.drawRect(position.x, position.y, width + position.x, h + position.y, paint);
+
+            // eye slot
+            DrawEyeSlot(canvas);
         }
-    };
+    }
 }

@@ -52,6 +52,6 @@ class Obstacle {
     }
     void Draw(Canvas canvas) {
         paint.setColor(color);
-        canvas.drawRect(position.x, position.y, (float) width, (float) height, paint);
+        canvas.drawRect(position.x, position.y, (float) width + position.x, (float) height + position.y, paint);
     }
 }

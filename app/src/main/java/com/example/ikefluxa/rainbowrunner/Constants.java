@@ -11,7 +11,7 @@ class Constants {
     // General game variables
     static final int black = Color.rgb(16, 9, 20);
     static final int bgColor = Color.rgb(174, 231, 245);
-    static final int groundHeight = Math.round((Screen.height / 4) * 3);
+    static int groundHeight;
     static final int scoreTextSize = 22;
     static final int ctrlTextSize = 18;
 
@@ -220,7 +220,7 @@ class Constants {
                         Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
                         Touch.x > Screen.width / 2;
             } else if (key.equals("launch")) {
-                return Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
                         Touch.x > Screen.width / 2;
             } else {
                 return false;
@@ -233,7 +233,7 @@ class Constants {
         int r = Color.red(c);
         int g = Color.green(c);
         int b = Color.blue(c);
-        return Color.argb(r, g, b, a);
+        return Color.argb(a, r, g, b);
     }
     static int lerpColor(int a, int b, double phase) {
         int red = (int) (Color.red(a) * phase + Color.red(b) * (1 - phase));

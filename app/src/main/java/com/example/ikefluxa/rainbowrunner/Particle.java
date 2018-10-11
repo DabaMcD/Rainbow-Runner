@@ -26,6 +26,6 @@ class Particle {
     void Draw(double totalLife, Canvas canvas) {
         int c = Constants.ColorWithAlpha((int) color, (int) (Math.round((life/totalLife)*205)+50));
         paint.setColor(c);
-        canvas.drawRect(position.x, position.y, width, (float) height, paint);
+        canvas.drawRect(position.x, position.y, width + position.x, (float) height + position.y, paint);
     }
 }

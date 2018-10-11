@@ -23,6 +23,7 @@ class Triangle {
         angle = 0;
         rotAmount = rot;
         fillColor = c;
+        paint = new Paint();
     }
     void Update() {
         angle += rotAmount;
@@ -47,21 +48,12 @@ class Triangle {
         canvas.rotate(angle);
         canvas.translate(-offsetX, -offsetY);
 
-//        triangle(
-//                points[0].x,
-//                points[0].y,
-//                points[1].x,
-//                points[1].y,
-//                points[2].x,
-//                points[2].y);
         Path trianglePath = new Path();
         trianglePath.setFillType(Path.FillType.EVEN_ODD);
-        trianglePath.moveTo(points.get(1).x,points.get(1).y);
-        trianglePath.lineTo(points.get(2).x,points.get(2).y);
-        trianglePath.lineTo(points.get(3).x,points.get(3).y);
-        trianglePath.lineTo(points.get(1).x,points.get(1).y);
+        trianglePath.moveTo(points.get(0).x, points.get(0).y);
+        trianglePath.lineTo(points.get(1).x, points.get(1).y);
+        trianglePath.lineTo(points.get(2).x, points.get(2).y);
         trianglePath.close();
-        // todo: likely this will not work
 
         canvas.drawPath(trianglePath, paint);
         canvas.restore();

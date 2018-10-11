@@ -51,7 +51,7 @@ class Gold {
     void DrawCollisionRect(Canvas canvas) {
         paint.setColor(Color.argb(100, 255, 0, 0));
         CollisionRectObj cr = CollisionRect();
-        canvas.drawRect(cr.position.x, cr.position.y, cr.width, cr.height, paint);
+        canvas.drawRect(cr.position.x, cr.position.y, cr.width + cr.position.x, cr.height + cr.position.y, paint);
     }
     void Draw(Canvas canvas) {
         float x = position.x;

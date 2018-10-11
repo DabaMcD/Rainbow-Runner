@@ -13,9 +13,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setScreenDims();
+
+        Constants.groundHeight = (Screen.height / 4) * 3;
         Constants.InitializeGame();
 
-        setScreenDims();
         gameScreen = findViewById(R.id.gameScreen);
         Touch.setTouchListener(gameScreen);
         createAndStartMainThread();
@@ -34,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
                                 Touch.justTouched ++;
                             }
                         });
-                        Thread.sleep(bob - System.currentTimeMillis() + 30);
+                        if(bob - System.currentTimeMillis() + 30 > 0) {
+                            Thread.sleep(bob - System.currentTimeMillis() + 30);
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

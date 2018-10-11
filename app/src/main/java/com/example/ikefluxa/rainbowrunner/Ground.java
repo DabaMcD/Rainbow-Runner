@@ -26,10 +26,10 @@ class Ground {
 
     public void Draw(Canvas canvas){
         paint.setColor(Constants.black);
-        canvas.drawRect(position.x, position.y, width, height, paint);
+        canvas.drawRect(position.x, position.y, width + position.x, height + position.y, paint);
         paint.setColor(Color.rgb(117, 117, 117));
-        canvas.drawRect(position.x, position.y, width, (float) (height * 0.05), paint);
+        canvas.drawRect(position.x, position.y, width + position.x, (float) (height * 0.05) + position.y, paint);
         paint.setColor(Color.rgb(171, 171, 171));
-        canvas.drawRect(position.x, position.y, width, (float) (height * 0.015), paint);
+        canvas.drawRect(position.x, position.y, width + position.x, (float) (height * 0.015) + position.y, paint);
     }
 }

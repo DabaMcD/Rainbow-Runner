@@ -33,6 +33,6 @@ class FireParticle {
     void Draw(float x, Canvas canvas) {
         int c = Constants.lerpColor(endColor, startColor, life/startingLife);
         paint.setColor(c);
-        canvas.drawRect(position.x + x, position.y, width, height, paint);
+        canvas.drawRect(position.x + x, position.y, width + position.x + x, height + position.y, paint);
     }
 }
