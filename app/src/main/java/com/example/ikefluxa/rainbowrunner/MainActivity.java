@@ -15,14 +15,19 @@ public class MainActivity extends AppCompatActivity {
 
         setScreenDims();
 
-        Constants.groundHeight = (Screen.height / 4) * 3;
-        Constants.InitializeGame();
+        Constants.groundHeight = (Screen.height / 5) * 3;
+        Constants.cmndrSize = Screen.width / 3;
+        Constants.blockSize = Constants.cmndrSize / 15;
+        Constants.jumpVelocity = -Constants.blockSize * 2.06;
+        Constants.psSize = Constants.cmndrSize;
+        Constants.launchVelocityY = -Constants.blockSize * 1.35;
+        Constants.moveSpeedX = (int) (Constants.cmndrSize / 18.75);
+        Constants.InitializeGame(this);
 
         gameScreen = findViewById(R.id.gameScreen);
         Touch.setTouchListener(gameScreen);
         createAndStartMainThread();
     }
-
     private void createAndStartMainThread() {
         mainThread = new Thread() {
             public void run() {
@@ -47,12 +52,19 @@ public class MainActivity extends AppCompatActivity {
         };
         mainThread.start();
     }
-
     private void setScreenDims() {
-        Display display = getWindowManager(). getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         Screen.width = size.x;
-        Screen.height = size.y;
+        Screen.height = size.y - getStatusBarHeight();
+    }
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

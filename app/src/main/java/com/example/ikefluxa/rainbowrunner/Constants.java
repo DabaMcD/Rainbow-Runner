@@ -1,9 +1,15 @@
 package com.example.ikefluxa.rainbowrunner;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
+import android.graphics.Typeface;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,19 +18,17 @@ class Constants {
     static final int black = Color.rgb(16, 9, 20);
     static final int bgColor = Color.rgb(174, 231, 245);
     static int groundHeight;
-    static final int scoreTextSize = 22;
-    static final int ctrlTextSize = 18;
 
     // Loss
     static final int lossTimerMax = 60;
     static final int flashes = 4;
 
     // Score
-    static final float scoreIncrement = 1 / 50;
+    static final double scoreIncrement = 1d / 50d;
 
     // Commander video
-    static final int cmndrSize = 150;
-    static final int blockSize = 10;
+    static int cmndrSize = 150;
+    static int blockSize = 10;
     static final ArrayList<Integer> colors = new ArrayList<>(Arrays.asList(
             Color.rgb(255, 204, 0),
             Color.rgb(240, 142, 29),
@@ -34,14 +38,14 @@ class Constants {
     ));
 
     // Movement
-    static final int moveSpeedX = 8;
-    static final double launchVelocityY = -blockSize * 1.35;
+    static int moveSpeedX = 8;
+    static double launchVelocityY = -blockSize * 1.35;
     static final double launchScale = 0.137;
     static final double jumpScale = 0.080;
-    static final double jumpVelocity = -blockSize * 2.06;
+    static double jumpVelocity = -blockSize * 2.06;
 
     // Particles
-    static final int psSize = 150;
+    static int psSize = 150;
 
     // Obstacles
     static final ArrayList<String> obstacleTypes = new ArrayList<>(Arrays.asList(
@@ -65,9 +69,18 @@ class Constants {
 
     // Other
     private static Paint paint = new Paint();
+    private static int ctrlButtonHeight;
+    private static int ctrlButtonStrokeWidth;
 
-    static void InitializeGame() {
-        GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6);
+    static void InitializeGame(Context context) {
+        if(!scoreFileExists(context)) {
+            writeScore(context, 0);
+        }
+        GameVals.highScore = readScore(context);
+        ctrlButtonHeight = (Screen.height - groundHeight) / 3;
+        ctrlButtonStrokeWidth = ctrlButtonHeight / 12;
+
+        GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6, context);
         InitializeGround();
         GameVals.cmndrVideo = new CommanderVideo();
         GameVals.pSys = new ParticleSystem(GameVals.cmndrVideo, GameVals.cmndrVideo.position.x, GameVals.cmndrVideo.position.y, psSize, colors, GameVals.pLife);
@@ -81,10 +94,48 @@ class Constants {
     }
     static void LoseGame() {
         GameVals.cmndrVideo.Kill();
-        GameVals.highScore = GameVals.score > GameVals.highScore ? GameVals.score : GameVals.highScore;
+        GameVals.highScore = (int) Math.round(GameVals.score > GameVals.highScore ? GameVals.score : GameVals.highScore);
         GameVals.gameState = GameStates.loss;
     }
-    static void ResetGame() {
+    private static void writeScore(Context context, int score) {
+        context.deleteFile("highscore.txt");
+        File path = context.getFilesDir();
+        File file = new File(path, "highscore.txt");
+        try {
+            FileOutputStream stream = new FileOutputStream(file);
+            stream.write(String.valueOf(score).getBytes());
+            stream.close();
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            System.out.println("ioexception");
+        }
+    }
+    private static int readScore(Context context) {
+        String text = "";
+        FileInputStream fis;
+        try {
+            fis = context.openFileInput("highscore.txt");
+            int size = fis.available();
+            byte[] buffer = new byte[size];
+            fis.read(buffer);
+            fis.close();
+            text = new String(buffer);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+        return Integer.parseInt(text);
+    }
+    private static boolean scoreFileExists(Context context) {
+        File path = context.getFilesDir();
+        File file = new File(path, "highscore.txt");
+        return file.exists() && !file.isDirectory();
+    }
+    static void ResetGame(Context context) {
+        if(GameVals.score > readScore(context)) {
+            writeScore(context, (int) Math.round(GameVals.score));
+        }
+
         GameVals.score = 0;
         GameVals.lossTimer = 0;
         GameVals.launchTimer = 0;
@@ -151,7 +202,7 @@ class Constants {
             return true;
         }
         return false;
-    } // todo: check for occurrences and make multiple functions taking in different types according to the uses
+    }
     static boolean Overlap(Obstacle obj1, CollisionRectObj obj2) {
         if (obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
@@ -186,18 +237,18 @@ class Constants {
     static boolean IsKeyDown(String key) {
         if(Touch.isTouching) {
             if (key.equals("jump")) {
-                return Touch.y > Constants.groundHeight &&
-                        Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                        Touch.y < Screen.height - ctrlButtonHeight &&
                         Touch.x < Screen.width / 2;
             } else if (key.equals("slide")) {
-                return Touch.y > Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight &&
                         Touch.x < Screen.width / 2;
             } else if (key.equals("kick")) {
-                return Touch.y > Constants.groundHeight &&
-                        Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                        Touch.y < Screen.height - ctrlButtonHeight &&
                         Touch.x > Screen.width / 2;
             } else if (key.equals("launch")) {
-                return Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight &&
                         Touch.x > Screen.width / 2;
             } else {
                 return false;
@@ -209,18 +260,18 @@ class Constants {
     static boolean IsKeyPressed(String key) {
         if(Touch.isTouching && Touch.justTouched < 2) {
             if (key.equals("jump")) {
-                return Touch.y > Constants.groundHeight &&
-                        Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                        Touch.y < Screen.height - ctrlButtonHeight &&
                         Touch.x < Screen.width / 2;
             } else if (key.equals("slide")) {
-                return Touch.y > Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight &&
                         Touch.x < Screen.width / 2;
             } else if (key.equals("kick")) {
-                return Touch.y > Constants.groundHeight &&
-                        Touch.y < Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                        Touch.y < Screen.height - ctrlButtonHeight &&
                         Touch.x > Screen.width / 2;
             } else if (key.equals("launch")) {
-                return Touch.y > Constants.groundHeight + (Screen.height - Constants.groundHeight) / 2 &&
+                return Touch.y > Screen.height - ctrlButtonHeight &&
                         Touch.x > Screen.width / 2;
             } else {
                 return false;
@@ -240,7 +291,7 @@ class Constants {
         int green = (int) (Color.green(a) * phase + Color.green(b) * (1 - phase));
         int blue = (int) (Color.blue(a) * phase + Color.blue(b) * (1 - phase));
         return Color.rgb(red, green, blue);
-    } // todo: a color problem might be here
+    }
     static void UpdateGround() {
         for (int i = GameVals.ground.size() - 1; i >= 0 ; i--){
             Ground g = GameVals.ground.get(i);
@@ -258,36 +309,91 @@ class Constants {
     }
     static void DrawScore(Canvas canvas) {
         // draw score
-        paint.setTextSize(scoreTextSize);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setTextSize(ctrlButtonHeight / 3);
+        paint.setColor(bgColor);
         String txt;
         float x, y;
-        paint.setColor(Color.rgb(255, 255, 255));
-        paint.setStrokeWidth(4);
         // score
-        x = 10;
-        y = Screen.height - 25;
-        paint.setTextAlign(Paint.Align.LEFT);
+        x = Screen.width / 4;
+        y = groundHeight + ctrlButtonHeight / 2;
+        paint.setTextAlign(Paint.Align.CENTER);
         txt = "Score: " + Math.round(GameVals.score);
-        canvas.drawText(txt, x, y, paint);
+        canvas.drawText(txt, x, y + paint.getTextSize() / 2, paint);
         // high score
-        paint.setTextAlign(Paint.Align.RIGHT);
+        paint.setTextAlign(Paint.Align.CENTER);
         txt = "High Score: " + Math.round(GameVals.highScore);
-        x = Screen.width - 10 - paint.measureText(txt);
-        canvas.drawText(txt, x, y, paint);
+        x = Screen.width / 4 * 3;
+        canvas.drawText(txt, x, y + paint.getTextSize() / 2, paint);
     }
     static void DrawControls(Canvas canvas) {
-//        int txtSize = ctrlTextSize;
-//        float x, y, txtWidth;
-//        String txt, ctrlTxt;
-//        int bufferX = 10;
-//        int bufferY = 18;
-//        int obIndex = 0;
-//        int ctrlOffset = 11;
-//        int rectOffsetX = 8;
-//        int rectOffsetY = 5;
-//        paint.setTextAlign(Paint.Align.LEFT);
-//        paint.setTextSize(txtSize);
+        paint.setTextSize(ctrlButtonHeight / 2);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        int x, y, w = Screen.width / 2;
 
-        // todo: draw controls here
+        // Jump button
+        x = 0;
+        y = Screen.height - ctrlButtonHeight * 2;
+        paint.setColor(obstacleColors.get(0));
+        if(IsKeyDown(obstacleTypes.get(0))) {
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(x, y, x + w, y + ctrlButtonHeight, paint);
+            paint.setColor(black);
+        } else {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(ctrlButtonStrokeWidth);
+            canvas.drawRect(x + ctrlButtonStrokeWidth / 2, y + ctrlButtonStrokeWidth / 2, x + w - ctrlButtonStrokeWidth / 2, y + ctrlButtonHeight - ctrlButtonStrokeWidth / 2, paint);
+            paint.setStyle(Paint.Style.FILL);
+        }
+        canvas.drawText(obstacleTypes.get(0).toUpperCase(), x + w / 2, y + ctrlButtonHeight / 2 + paint.getTextSize() / 3, paint);
+
+        // Kick button
+        x = Screen.width / 2;
+        y = Screen.height - ctrlButtonHeight * 2;
+        paint.setColor(obstacleColors.get(1));
+        if(IsKeyDown(obstacleTypes.get(1))) {
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(x, y, x + w, y + ctrlButtonHeight, paint);
+            paint.setColor(black);
+        } else {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(ctrlButtonStrokeWidth);
+            canvas.drawRect(x + ctrlButtonStrokeWidth / 2, y + ctrlButtonStrokeWidth / 2, x + w - ctrlButtonStrokeWidth / 2, y + ctrlButtonHeight - ctrlButtonStrokeWidth / 2, paint);
+            paint.setStyle(Paint.Style.FILL);
+        }
+        canvas.drawText(obstacleTypes.get(1).toUpperCase(), x + w / 2, y + ctrlButtonHeight / 2 + paint.getTextSize() / 3, paint);
+
+        // Slide button
+        x = 0;
+        y = Screen.height - ctrlButtonHeight;
+        paint.setColor(obstacleColors.get(2));
+        if(IsKeyDown(obstacleTypes.get(2))) {
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(x, y, x + w, y + ctrlButtonHeight, paint);
+            paint.setColor(black);
+        } else {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(ctrlButtonStrokeWidth);
+            canvas.drawRect(x + ctrlButtonStrokeWidth / 2, y + ctrlButtonStrokeWidth / 2, x + w - ctrlButtonStrokeWidth / 2, y + ctrlButtonHeight - ctrlButtonStrokeWidth / 2, paint);
+            paint.setStyle(Paint.Style.FILL);
+        }
+        canvas.drawText(obstacleTypes.get(2).toUpperCase(), x + w / 2, y + ctrlButtonHeight / 2 + paint.getTextSize() / 3, paint);
+
+        // Launch button
+        x = Screen.width / 2;
+        y = Screen.height - ctrlButtonHeight;
+        paint.setColor(obstacleColors.get(3));
+        if(IsKeyDown(obstacleTypes.get(3))) {
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(x, y, x + w, y + ctrlButtonHeight, paint);
+            paint.setColor(black);
+        } else {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(ctrlButtonStrokeWidth);
+            canvas.drawRect(x + ctrlButtonStrokeWidth / 2, y + ctrlButtonStrokeWidth / 2, x + w - ctrlButtonStrokeWidth / 2, y + ctrlButtonHeight - ctrlButtonStrokeWidth / 2, paint);
+            paint.setStyle(Paint.Style.FILL);
+        }
+        canvas.drawText(obstacleTypes.get(3).toUpperCase(), x + w / 2, y + ctrlButtonHeight / 2 + paint.getTextSize() / 3, paint);
     }
 }

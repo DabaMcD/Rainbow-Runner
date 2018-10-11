@@ -182,7 +182,7 @@ class ObstacleCollection {
             FireParticleSystem p = pSystems.get(i);
             p.Update();
             // remove parentless
-            if (obstacles.indexOf(p.parent) < 0) { // todo: error could be here
+            if (obstacles.indexOf(p.parent) < 0) {
                 pSystems.remove(i);
             }
         }

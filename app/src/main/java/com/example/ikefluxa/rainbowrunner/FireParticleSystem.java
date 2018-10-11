@@ -24,7 +24,7 @@ class FireParticleSystem {
     void SpawnParticles() {
         // new particles
         for (int i = 0; i < spawnCount; i++){
-            double vy = Math.random() * 1.7 - 2;
+            double vy = (Math.random() * 1.7 - 2) * Constants.cmndrSize / 150;
             particles.add(
                     new FireParticle(
                             (float) (Math.random() * (width - pSize)),

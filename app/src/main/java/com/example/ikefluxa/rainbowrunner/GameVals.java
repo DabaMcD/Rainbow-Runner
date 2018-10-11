@@ -13,7 +13,7 @@ class GameVals {
     static int lossTimer = 0;
 
     // Score
-    static int score = 0;
+    static double score = 0;
     static int highScore = 0;
 
     // Commander video

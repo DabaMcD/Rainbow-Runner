@@ -110,7 +110,5 @@ class Gold {
         side.close();
 
         canvas.drawPath(side, paint);
-
-        // todo: the above most probably doesn't work.
     }
 }

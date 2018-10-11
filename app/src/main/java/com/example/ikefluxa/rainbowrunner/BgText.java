@@ -21,7 +21,7 @@ class BgText {
 
     BgText() {
         txtSize = Screen.height / 2;
-        position = new Vector2(Screen.width, Screen.height / 2 - txtSize / 2);
+        position = new Vector2(Screen.width, Constants.groundHeight - txtSize);
         max = false; // at max level
         startText = "BEGIN";
         maxText = "MAX LEVEL";
@@ -34,7 +34,7 @@ class BgText {
         isVisible = true;
     }
     void Reset() {
-        position = new Vector2(Screen.width, Screen.height/2 - txtSize/2);
+        position = new Vector2(Screen.width, Constants.groundHeight - txtSize);
         velocity = new Vector2((float) baseVelocityX, 0);
         paint.setTextSize(txtSize);
         txt = startText;

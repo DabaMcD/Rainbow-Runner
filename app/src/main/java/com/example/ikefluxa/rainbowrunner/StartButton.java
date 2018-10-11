@@ -1,5 +1,6 @@
 package com.example.ikefluxa.rainbowrunner;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,11 +14,13 @@ class StartButton {
     private int fillColor,
         strokeColor;
     private Paint paint;
+    private Context context;
 
-    StartButton(float x, float y) {
+    StartButton(float x, float y, Context context) {
+        this.context = context;
         position = new Vector2(x, y);
-        width = 90;
-        height = 50;
+        width = Screen.width / 6;
+        height = Screen.width / 12;
         originX = this.width / 2;
         originY = this.height / 2;
         fillColor = Color.rgb(255, 0, 0);
@@ -29,7 +32,7 @@ class StartButton {
             fillColor = Constants.black;
             strokeColor = Color.rgb(255, 255, 255);
             if (Touch.isTouching){
-                 Constants.ResetGame(); // About to define
+                 Constants.ResetGame(context); // About to define
             }
         } else {
             fillColor = Color.rgb(255, 255, 255);
@@ -51,7 +54,7 @@ class StartButton {
         // Text
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(strokeColor);
-        paint.setTextSize(30);
+        paint.setTextSize(width / 3);
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText("Start", position.x, position.y + paint.getTextSize() / 3, paint);
     }

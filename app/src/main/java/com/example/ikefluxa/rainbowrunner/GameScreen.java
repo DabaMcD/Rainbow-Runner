@@ -8,28 +8,25 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class GameScreen extends View {
-    int counter;
-    Paint paint;
+    private Paint paint;
+    private Context context;
+
     public GameScreen(Context context) {
         super(context);
-        constructor();
+        constructor(context);
     }
-
     public GameScreen(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        constructor();
+        constructor(context);
     }
-
     public GameScreen(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        constructor();
+        constructor(context);
     }
-
-    private void constructor() {
-        counter = 0;
+    private void constructor(Context context) {
+        this.context = context;
         paint = new Paint();
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -49,6 +46,7 @@ public class GameScreen extends View {
                 Constants.DrawGround(canvas);
                 Constants.DrawControls(canvas);
                 GameVals.startButton.Draw(canvas);
+                Constants.DrawScore(canvas);
                 break;
             case "playing":
                 // update
@@ -67,6 +65,7 @@ public class GameScreen extends View {
                 GameVals.pSys.Draw(canvas);
                 GameVals.cmndrVideo.Draw(canvas);
                 Constants.DrawGround(canvas);
+                Constants.DrawControls(canvas);
                 GameVals.obstacles.Draw(canvas);
                 Constants.DrawScore(canvas);
                 if (GameVals.cmndrVideo.isAlive){
@@ -86,16 +85,16 @@ public class GameScreen extends View {
                 GameVals.pSys.Draw(canvas);
                 GameVals.cmndrVideo.Draw(canvas);
                 Constants.DrawGround(canvas);
+                Constants.DrawControls(canvas);
                 GameVals.obstacles.Draw(canvas);
                 Constants.DrawScore(canvas);
 
                 // end loss state
                 if (GameVals.lossTimer >= Constants.lossTimerMax){
-                    Constants.ResetGame();
+                    Constants.ResetGame(context);
                 }
         }
     }
-
     public void draw() {
         invalidate();
         requestLayout();
