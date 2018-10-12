@@ -6,11 +6,9 @@ import java.util.ArrayList;
 
 class ParticleSystem {
     private CommanderVideo parent;
-    private double x,
-            size,
+    private double size,
             pLife,
-            trailLength,
-            y;
+            trailLength;
     private ArrayList<Integer> pColors;
     private Vector2 position;
     private ArrayList<ArrayList<Particle>> particles;
@@ -66,7 +64,7 @@ class ParticleSystem {
         for (int i = 0; i < particles.size(); i++){
             ArrayList<Particle> zp = particles.get(i);
             double zy = position.y + i * zs;
-            // add remainer to last particle length
+            // add remainder to last particle length
             if (i == particles.size() - 1 ){zs += zr;}
             float zw = Constants.moveSpeedX + parent.position.x - parent.lastPosition.x;
             zp.add(

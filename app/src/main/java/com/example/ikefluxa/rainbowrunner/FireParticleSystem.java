@@ -1,7 +1,6 @@
 package com.example.ikefluxa.rainbowrunner;
 
 import android.graphics.Canvas;
-
 import java.util.ArrayList;
 
 class FireParticleSystem {
@@ -21,7 +20,7 @@ class FireParticleSystem {
         width = w;
         parent = p;
     }
-    void SpawnParticles() {
+    private void SpawnParticles() {
         // new particles
         for (int i = 0; i < spawnCount; i++){
             double vy = (Math.random() * 1.7 - 2) * Constants.cmndrSize / 150;
@@ -38,7 +37,6 @@ class FireParticleSystem {
         }
     }
     void Update() {
-        //position = new Vector2(mouseX, mouseY);
         if (parent != null){
             position = parent.position.Clone();
         }

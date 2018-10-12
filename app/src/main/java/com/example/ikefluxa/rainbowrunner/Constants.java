@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,43 +17,31 @@ class Constants {
     static final int black = Color.rgb(16, 9, 20);
     static final int bgColor = Color.rgb(174, 231, 245);
     static int groundHeight;
-
-    // Loss
     static final int lossTimerMax = 60;
     static final int flashes = 4;
-
-    // Score
     static final double scoreIncrement = 1d / 50d;
-
-    // Commander video
     static int cmndrSize = 150;
     static int blockSize = 10;
-    static final ArrayList<Integer> colors = new ArrayList<>(Arrays.asList(
+    private static final ArrayList<Integer> colors = new ArrayList<>(Arrays.asList(
             Color.rgb(255, 204, 0),
             Color.rgb(240, 142, 29),
             Color.rgb(58, 186, 169),
             Color.rgb(230, 97, 139),
             Color.rgb(95, 44, 189)
     ));
-
-    // Movement
     static int moveSpeedX = 8;
     static double launchVelocityY = -blockSize * 1.35;
     static final double launchScale = 0.137;
     static final double jumpScale = 0.080;
     static double jumpVelocity = -blockSize * 2.06;
-
-    // Particles
     static int psSize = 150;
-
-    // Obstacles
     static final ArrayList<String> obstacleTypes = new ArrayList<>(Arrays.asList(
             "jump",
             "kick",
             "slide",
             "launch"
     ));
-    static final int obstacleSpawnMax = 70;
+    private static final int obstacleSpawnMax = 70;
     static final int obstacleSpawnMin = 22;
     static final int launchTimerMax = 40;
     static final ArrayList<Integer> obstacleColors = new ArrayList<>(Arrays.asList(
@@ -63,11 +50,7 @@ class Constants {
             Color.rgb(22, 88, 196),
             Color.rgb(255, 105, 173)
     ));
-
-    // Gold
     static final int goldPoints = 100;
-
-    // Other
     private static Paint paint = new Paint();
     private static int ctrlButtonHeight;
     private static int ctrlButtonStrokeWidth;
@@ -80,7 +63,7 @@ class Constants {
         ctrlButtonHeight = (Screen.height - groundHeight) / 3;
         ctrlButtonStrokeWidth = ctrlButtonHeight / 12;
 
-        GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6, context);
+        GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6);
         InitializeGround();
         GameVals.cmndrVideo = new CommanderVideo();
         GameVals.pSys = new ParticleSystem(GameVals.cmndrVideo, GameVals.cmndrVideo.position.x, GameVals.cmndrVideo.position.y, psSize, colors, GameVals.pLife);
@@ -105,10 +88,8 @@ class Constants {
             FileOutputStream stream = new FileOutputStream(file);
             stream.write(String.valueOf(score).getBytes());
             stream.close();
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
         } catch(IOException e) {
-            System.out.println("ioexception");
+            e.printStackTrace();
         }
     }
     private static int readScore(Context context) {
@@ -158,7 +139,7 @@ class Constants {
             }
         }
     }
-    static void Collide(CommanderVideo obj1, Ground obj2) {
+    private static void Collide(CommanderVideo obj1, Ground obj2) {
         float overlapX;
         float overlapY;
         if (obj1.lastPosition.x < obj2.lastPosition.x){
@@ -194,41 +175,23 @@ class Constants {
             }
         }
     }
-    static boolean Overlap(CommanderVideo obj1, Ground obj2) {
-        if (obj1.position.x < obj2.position.x + obj2.width &&
+    private static boolean Overlap(CommanderVideo obj1, Ground obj2) {
+        return obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
                 obj1.position.y < obj2.position.y + obj2.height &&
-                obj1.position.y + obj1.height > obj2.position.y){
-            return true;
-        }
-        return false;
+                obj1.position.y + obj1.height > obj2.position.y;
     }
     static boolean Overlap(Obstacle obj1, CollisionRectObj obj2) {
-        if (obj1.position.x < obj2.position.x + obj2.width &&
+        return obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
                 obj1.position.y < obj2.position.y + obj2.height &&
-                obj1.position.y + obj1.height > obj2.position.y){
-            return true;
-        }
-        return false;
-    }
-    static boolean Overlap(CollisionRectObj obj1, Obstacle obj2) {
-        if (obj1.position.x < obj2.position.x + obj2.width &&
-                obj1.position.x + obj1.width > obj2.position.x &&
-                obj1.position.y < obj2.position.y + obj2.height &&
-                obj1.position.y + obj1.height > obj2.position.y){
-            return true;
-        }
-        return false;
+                obj1.position.y + obj1.height > obj2.position.y;
     }
     static boolean Overlap(CollisionRectObj obj1, CollisionRectObj obj2) {
-        if (obj1.position.x < obj2.position.x + obj2.width &&
+        return obj1.position.x < obj2.position.x + obj2.width &&
                 obj1.position.x + obj1.width > obj2.position.x &&
                 obj1.position.y < obj2.position.y + obj2.height &&
-                obj1.position.y + obj1.height > obj2.position.y){
-            return true;
-        }
-        return false;
+                obj1.position.y + obj1.height > obj2.position.y;
     }
     static boolean CheckBounds(GoldParticle obj) {
         return (obj.position.x + obj.width < 0 || obj.position.x > Screen.width ||
@@ -236,22 +199,23 @@ class Constants {
     }
     static boolean IsKeyDown(String key) {
         if(Touch.isTouching) {
-            if (key.equals("jump")) {
-                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+            switch (key) {
+                case "jump":
+                    return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
                         Touch.y < Screen.height - ctrlButtonHeight &&
                         Touch.x < Screen.width / 2;
-            } else if (key.equals("slide")) {
-                return Touch.y > Screen.height - ctrlButtonHeight &&
-                        Touch.x < Screen.width / 2;
-            } else if (key.equals("kick")) {
-                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
-                        Touch.y < Screen.height - ctrlButtonHeight &&
-                        Touch.x > Screen.width / 2;
-            } else if (key.equals("launch")) {
-                return Touch.y > Screen.height - ctrlButtonHeight &&
-                        Touch.x > Screen.width / 2;
-            } else {
-                return false;
+                case "slide":
+                    return Touch.y > Screen.height - ctrlButtonHeight &&
+                            Touch.x < Screen.width / 2;
+                case "kick":
+                    return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                            Touch.y < Screen.height - ctrlButtonHeight &&
+                            Touch.x > Screen.width / 2;
+                case "launch":
+                    return Touch.y > Screen.height - ctrlButtonHeight &&
+                            Touch.x > Screen.width / 2;
+                default:
+                    return false;
             }
         } else {
             return false;
@@ -259,22 +223,23 @@ class Constants {
     }
     static boolean IsKeyPressed(String key) {
         if(Touch.isTouching && Touch.justTouched < 2) {
-            if (key.equals("jump")) {
-                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
-                        Touch.y < Screen.height - ctrlButtonHeight &&
-                        Touch.x < Screen.width / 2;
-            } else if (key.equals("slide")) {
-                return Touch.y > Screen.height - ctrlButtonHeight &&
-                        Touch.x < Screen.width / 2;
-            } else if (key.equals("kick")) {
-                return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
-                        Touch.y < Screen.height - ctrlButtonHeight &&
-                        Touch.x > Screen.width / 2;
-            } else if (key.equals("launch")) {
-                return Touch.y > Screen.height - ctrlButtonHeight &&
-                        Touch.x > Screen.width / 2;
-            } else {
-                return false;
+            switch (key) {
+                case "jump":
+                    return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                            Touch.y < Screen.height - ctrlButtonHeight &&
+                            Touch.x < Screen.width / 2;
+                case "slide":
+                    return Touch.y > Screen.height - ctrlButtonHeight &&
+                            Touch.x < Screen.width / 2;
+                case "kick":
+                    return Touch.y > Screen.height - ctrlButtonHeight * 2 &&
+                            Touch.y < Screen.height - ctrlButtonHeight &&
+                            Touch.x > Screen.width / 2;
+                case "launch":
+                    return Touch.y > Screen.height - ctrlButtonHeight &&
+                            Touch.x > Screen.width / 2;
+                default:
+                    return false;
             }
         } else {
             return false;

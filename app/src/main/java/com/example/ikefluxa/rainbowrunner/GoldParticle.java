@@ -3,8 +3,6 @@ package com.example.ikefluxa.rainbowrunner;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import static com.example.ikefluxa.rainbowrunner.GameVals.g;
-
 class GoldParticle {
     Vector2 position;
     private Vector2 velocity;
@@ -24,7 +22,7 @@ class GoldParticle {
         paint = new Paint();
     }
     void Update() {
-        velocity.y += g * 0.1;
+        velocity.y += GameVals.g * 0.1;
         position.Add(velocity);
         life --;
     }

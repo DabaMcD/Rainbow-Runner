@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import static com.example.ikefluxa.rainbowrunner.GameVals.obstacleSpawnInterval;
-
 class BgText {
     private int txtSize;
     private double baseVelocityX,
@@ -44,7 +42,7 @@ class BgText {
     }
     void Update() {
         // movement
-        if (!max && obstacleSpawnInterval == Constants.obstacleSpawnMin){
+        if (!max && GameVals.obstacleSpawnInterval == Constants.obstacleSpawnMin){
             max = true;
             position.x = Screen.width;
             txt = maxText;

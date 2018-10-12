@@ -1,11 +1,10 @@
 package com.example.ikefluxa.rainbowrunner;
 
 import android.graphics.Canvas;
-
 import java.util.ArrayList;
 
 class ObstacleCollection {
-    ArrayList<Obstacle> obstacles;
+    private ArrayList<Obstacle> obstacles;
     private ArrayList<FireParticleSystem> pSystems;
     private ArrayList<Triangle> debris;
     
@@ -19,7 +18,7 @@ class ObstacleCollection {
         pSystems = new ArrayList<>();
         debris = new ArrayList<>();
     }
-	void SpawnDebris(Obstacle rect, CollisionRectObj kickRect) {
+	private void SpawnDebris(Obstacle rect, CollisionRectObj kickRect) {
         float x = rect.position.x;
         float x2 = (float) (rect.position.x + rect.width);
         float y = kickRect.position.y + kickRect.height/2;
@@ -144,32 +143,33 @@ class ObstacleCollection {
             obstacles.add(o);
 
             // additional spawning events
-            if (Constants.obstacleTypes.get(obIndex).equals("launch")) {
-                // ground
-                GameVals.launchTimer = Constants.launchTimerMax;
-                GameVals.ground.add(new Ground(Screen.width, (int) (o.width * 2)));
-                GameVals.ground.add(new Ground(Screen.width + Constants.launchTimerMax * Constants.moveSpeedX, GameVals.obstacleSpawnInterval * Constants.moveSpeedX));
-                // gold
-                if (Math.random() < 0.5) {
-                    GameVals.gold.Add(new Gold(Screen.width + Constants.moveSpeedX * Constants.launchTimerMax / 2, Constants.groundHeight - Constants.cmndrSize * 7 / 4));
-                }
-            }
-            else if (Constants.obstacleTypes.get(obIndex).equals("slide")) {
-                // gold
-                if (Math.random() < 0.33) {
-                    o = obstacles.get(obstacles.size() - 1);
-                    Gold g = new Gold((float) (o.position.x + o.width), Constants.groundHeight - Constants.cmndrSize);
-                    float offset = (float) ((Constants.obstacleSpawnMin * Constants.moveSpeedX - o.width - g.width) / 2);
-                    g.position.x += offset;
-                    GameVals.gold.Add(g);
-                }
-            }
-            else if (Constants.obstacleTypes.get(obIndex).equals("jump")) {
-                pSystems.add(new FireParticleSystem(o.position.x, o.position.y, (float) o.width, o));
-                // prime the fire/generate particles
-                for (int i = 0; i < 10; i++) {
-                    pSystems.get(pSystems.size() - 1).Update();
-                }
+            switch (Constants.obstacleTypes.get(obIndex)) {
+                case "launch":
+                    // ground
+                    GameVals.launchTimer = Constants.launchTimerMax;
+                    GameVals.ground.add(new Ground(Screen.width, (int) (o.width * 2)));
+                    GameVals.ground.add(new Ground(Screen.width + Constants.launchTimerMax * Constants.moveSpeedX, GameVals.obstacleSpawnInterval * Constants.moveSpeedX));
+                    // gold
+                    if (Math.random() < 0.5) {
+                        GameVals.gold.Add(new Gold(Screen.width + Constants.moveSpeedX * Constants.launchTimerMax / 2, Constants.groundHeight - Constants.cmndrSize * 7 / 4));
+                    }
+                    break;
+                case "slide":
+                    // gold
+                    if (Math.random() < 0.33) {
+                        o = obstacles.get(obstacles.size() - 1);
+                        Gold g = new Gold((float) (o.position.x + o.width), Constants.groundHeight - Constants.cmndrSize);
+                        float offset = (float) ((Constants.obstacleSpawnMin * Constants.moveSpeedX - o.width - g.width) / 2);
+                        g.position.x += offset;
+                        GameVals.gold.Add(g);
+                    }
+                case "jump":
+                    pSystems.add(new FireParticleSystem(o.position.x, o.position.y, (float) o.width, o));
+                    // prime the fire/generate particles
+                    for (int i = 0; i < 10; i++) {
+                        pSystems.get(pSystems.size() - 1).Update();
+                    }
+                    break;
             }
             // ground for non launch obstacles
             if (!Constants.obstacleTypes.get(obIndex).equals("launch")) {
@@ -178,7 +178,7 @@ class ObstacleCollection {
         }
 
         // update particle systems
-        for (int i = pSystems.size() - 1; i >= 0; i--) {
+        for (int i = pSystems.size() - 1; i >= 0; i --) {
             FireParticleSystem p = pSystems.get(i);
             p.Update();
             // remove parentless

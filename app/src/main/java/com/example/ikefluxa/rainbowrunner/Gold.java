@@ -9,16 +9,8 @@ class Gold {
     Vector2 position;
     float width,
             height;
-    private float scaleX,
-            sideScaleX,
-            frontScaleX,
-            w,
-            sideWidth,
+    private float sideWidth,
             frontWidth,
-            scaleY,
-            frontScaleY,
-            topScaleY,
-            h,
             frontHeight,
             topHeight;
     private Paint paint;
@@ -27,17 +19,16 @@ class Gold {
         position = new Vector2(x, y);
         width = Constants.blockSize * 6;
         height = (float) (Constants.blockSize * 3.1);
-
-        scaleX = 11;
-        sideScaleX = 8;
-        frontScaleX = scaleX - sideScaleX;
-        w = width / scaleX;
+        float scaleX = 11;
+        float sideScaleX = 8;
+        float frontScaleX = scaleX - sideScaleX;
+        float w = width / scaleX;
         sideWidth = w * sideScaleX;
         frontWidth = w * frontScaleX;
-        scaleY = 4;
-        frontScaleY = 2;
-        topScaleY = (scaleY - frontScaleY) / 2;
-        h = height / scaleY;
+        float scaleY = 4;
+        float frontScaleY = 2;
+        float topScaleY = (scaleY - frontScaleY) / 2;
+        float h = height / scaleY;
         frontHeight = h * frontScaleY;
         topHeight = h * topScaleY;
         paint = new Paint();
@@ -47,11 +38,6 @@ class Gold {
     }
     void Update() {
         position.x -= Constants.moveSpeedX;
-    }
-    void DrawCollisionRect(Canvas canvas) {
-        paint.setColor(Color.argb(100, 255, 0, 0));
-        CollisionRectObj cr = CollisionRect();
-        canvas.drawRect(cr.position.x, cr.position.y, cr.width + cr.position.x, cr.height + cr.position.y, paint);
     }
     void Draw(Canvas canvas) {
         float x = position.x;

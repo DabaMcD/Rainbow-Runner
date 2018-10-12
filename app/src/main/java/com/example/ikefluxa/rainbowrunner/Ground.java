@@ -18,12 +18,10 @@ class Ground {
         height = Screen.height - position.y;
         paint = new Paint();
     }
-
     public void Update(){
         lastPosition = position.Clone();
         position.x -= Constants.moveSpeedX;
     }
-
     public void Draw(Canvas canvas){
         paint.setColor(Constants.black);
         canvas.drawRect(position.x, position.y, width + position.x, height + position.y, paint);

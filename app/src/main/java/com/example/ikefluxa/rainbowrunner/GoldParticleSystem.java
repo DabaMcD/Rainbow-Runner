@@ -2,7 +2,6 @@ package com.example.ikefluxa.rainbowrunner;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-
 import java.util.ArrayList;
 
 class GoldParticleSystem {

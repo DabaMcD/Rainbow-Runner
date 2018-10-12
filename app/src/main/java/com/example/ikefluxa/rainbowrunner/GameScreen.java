@@ -38,7 +38,7 @@ public class GameScreen extends View {
                 // update
                 GameVals.cmndrVideo.Update();
                 GameVals.pSys.Update();
-                GameVals.startButton.Update();
+                GameVals.startButton.Update(context);
 
                 // draw
                 GameVals.pSys.Draw(canvas);

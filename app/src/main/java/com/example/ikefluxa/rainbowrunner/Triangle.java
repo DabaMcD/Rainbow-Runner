@@ -3,7 +3,6 @@ package com.example.ikefluxa.rainbowrunner;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-
 import java.util.ArrayList;
 
 class Triangle {

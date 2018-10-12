@@ -18,7 +18,7 @@ class GoldCollection {
     void Add(Gold g) {
         gold.add(g);
     }
-    void CheckGoldCollision(){
+    private void CheckGoldCollision(){
         for (int i = gold.size() - 1; i >= 0; i--){
             Gold g = gold.get(i);
             if (Constants.Overlap(g.CollisionRect(), GameVals.cmndrVideo.CollisionRect())){

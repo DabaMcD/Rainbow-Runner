@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private void createAndStartMainThread() {
         mainThread = new Thread() {
             public void run() {
-                while (true) {
+                while (mainThread.isAlive()) {
                     long bob = System.currentTimeMillis();
                     try {
                         runOnUiThread(new Runnable() {

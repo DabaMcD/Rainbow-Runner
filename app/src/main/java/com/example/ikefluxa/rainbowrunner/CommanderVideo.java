@@ -23,7 +23,6 @@ class CommanderVideo {
             kickTimerMax,
             kickTimer;
     private int runFrame,
-            testColor,
             totalRunFrames,
             runFrameTimer,
             runFrameIncrement,
@@ -49,7 +48,6 @@ class CommanderVideo {
         kickTimerMax = (float) (Constants.obstacleSpawnMin * 0.75);
         kickKeyHeld = false;
         isLaunching = false;
-        testColor = Color.rgb(255, 0, 0);
         heightScale = 11d / 15d; // pct of height that is body
         runFrame = 0;
         totalRunFrames = 7;
@@ -83,13 +81,13 @@ class CommanderVideo {
         isTouchingBottom = false;
         isAlive = true;
     }
-    boolean IsRunning() {
+    private boolean IsRunning() {
         return  !isJumping &&
                 !isSliding &&
                 !isKicking &&
                 !isLaunching;
     }
-    void UpdateRunFrame() {
+    private void UpdateRunFrame() {
         if (!IsRunning()){
             runFrame = 0;
             return;
@@ -117,7 +115,7 @@ class CommanderVideo {
     boolean CanLaunch() {
         return Constants.IsKeyPressed("launch") && !isLaunching && isTouchingBottom;
     }
-    void UpdateKickTimer() {
+    private void UpdateKickTimer() {
         if (kickTimer > 0){
             kickTimer--;
             if (kickTimer <= 0){
@@ -129,7 +127,7 @@ class CommanderVideo {
         isAlive = false;
         ResetSlidePosition();
     }
-    void ResetSlidePosition() {
+    private void ResetSlidePosition() {
         if (isSliding){
             position.y -= Constants.cmndrSize - slideHeight + GameVals.g;
             height = Constants.cmndrSize;
@@ -209,32 +207,7 @@ class CommanderVideo {
             runFrame = 4;
         }
     }
-    void DrawCollisionRects(Canvas canvas) {
-        // collision rect
-        CollisionRectObj cr = CollisionRect();
-        testColor = Color.argb(125, 255, 0, 0);
-        for (int i = 0; i < GameVals.obstacles.obstacles.size(); i++){
-            if (Constants.Overlap(cr, GameVals.obstacles.obstacles.get(i))){
-                testColor = Color.argb(125, 0, 255, 0);
-            }
-        }
-        paint.setColor(testColor);
-        canvas.drawRect(cr.position.x, cr.position.y, cr.width + cr.position.x, cr.height + cr.position.y, paint);
-
-        // kick rect
-        if (isKicking){
-            CollisionRectObj kr = KickRect();
-            testColor = Color.argb(125, 255, 0, 0);
-            for (int i = 0; i < GameVals.obstacles.obstacles.size(); i++){
-                if (Constants.Overlap(kr, GameVals.obstacles.obstacles.get(i))){
-                    testColor = Color.argb(125, 0, 255, 0);
-                }
-            }
-            paint.setColor(testColor);
-            canvas.drawRect(kr.position.x, kr.position.y, kr.width + kr.position.x, kr.height + kr.position.y, paint);
-        }
-    }
-    void DrawEyeSlot(Canvas canvas) {
+    private void DrawEyeSlot(Canvas canvas) {
         paint.setColor(Color.rgb(255, 255, 255));
         float x = position.x + Constants.blockSize * 2;
         float y = position.y + Constants.blockSize;

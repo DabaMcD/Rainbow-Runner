@@ -14,10 +14,8 @@ class StartButton {
     private int fillColor,
         strokeColor;
     private Paint paint;
-    private Context context;
 
-    StartButton(float x, float y, Context context) {
-        this.context = context;
+    StartButton(float x, float y) {
         position = new Vector2(x, y);
         width = Screen.width / 6;
         height = Screen.width / 12;
@@ -27,7 +25,7 @@ class StartButton {
         strokeColor = Color.rgb(255, 0, 0);
         paint = new Paint();
     }
-    void Update() {
+    void Update(Context context) {
         if (Touch.x >= position.x - originX && Touch.x < position.x + width - originX && Touch.y >= position.y - originY && Touch.y < position.y + height - originY){
             fillColor = Constants.black;
             strokeColor = Color.rgb(255, 255, 255);
