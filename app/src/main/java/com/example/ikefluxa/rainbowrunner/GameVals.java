@@ -30,7 +30,7 @@ class GameVals {
     static ObstacleCollection obstacles;
     static int launchTimer = 0;
     static int obstacleTimer = 0;
-    static int obstacleSpawnInterval = 70;
+    static int obstacleSpawnInterval = 22;
 
     // Gold
     static GoldCollection gold;

@@ -32,7 +32,7 @@ class CommanderVideo {
     private Paint paint;
 
     CommanderVideo() {
-        position = new Vector2(Screen.width / 2 - 25, Constants.groundHeight - Constants.cmndrSize);
+        position = new Vector2((Screen.width / 250) * (125 - GameVals.obstacleSpawnInterval) + Constants.blockSize * 2, Constants.groundHeight - Constants.cmndrSize);
         lastPosition = position.Clone();
         width = Constants.blockSize * 4;
         height = Constants.cmndrSize;
@@ -67,7 +67,7 @@ class CommanderVideo {
     }
     void Reset() {
         height = Constants.cmndrSize;
-        position = new Vector2(Screen.width / 2 - 25, Constants.groundHeight - height);
+        position.y = Constants.groundHeight - height;
         velocityY = 0;
         isVisible = true;
         isJumping = false;
@@ -200,6 +200,9 @@ class CommanderVideo {
         }
 
         isTouchingBottom = false;
+
+        float properX = (Screen.width / 250) * (125 - GameVals.obstacleSpawnInterval) + width / 2;
+        position.x -= (position.x - properX) / 10;
 
         UpdateKickTimer();
         Constants.CheckGroundCollision();
