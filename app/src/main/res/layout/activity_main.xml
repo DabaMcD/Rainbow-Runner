@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.ikefluxa.rainbowrunner.GameScreen
+    <com.rainbowrunner.rainbowrunner.rainbowrunner.GameScreen
         android:id="@+id/gameScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
