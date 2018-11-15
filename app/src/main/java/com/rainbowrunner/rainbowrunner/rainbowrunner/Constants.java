@@ -63,7 +63,7 @@ class Constants {
         ctrlButtonHeight = (Screen.height - groundHeight) / 3;
         ctrlButtonStrokeWidth = ctrlButtonHeight / 12;
 
-        GameVals.startButton = new StartButton(Screen.width / 2, Screen.height / 6);
+        GameVals.startButton = new StartButton();
         InitializeGround();
         GameVals.cmndrVideo = new CommanderVideo();
         GameVals.pSys = new ParticleSystem(GameVals.cmndrVideo, GameVals.cmndrVideo.position.x, GameVals.cmndrVideo.position.y, psSize, colors, GameVals.pLife);
