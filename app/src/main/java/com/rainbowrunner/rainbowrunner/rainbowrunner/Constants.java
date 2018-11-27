@@ -277,7 +277,7 @@ class Constants {
         paint.setAntiAlias(true);
         paint.setTypeface(Typeface.DEFAULT_BOLD);
         paint.setTextSize(ctrlButtonHeight / 4);
-        paint.setColor(bgColor);
+        paint.setColor(Color.WHITE);
         String txt;
         float x, y;
         // score
