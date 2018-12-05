@@ -7,6 +7,7 @@ class Touch {
     static float x;
     static float y;
     static long justTouched = 1000;
+    static boolean isTouching = false;
 
     static void setTouchListener(View view) {
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -18,14 +19,17 @@ class Touch {
                         x = event.getX();
                         y = event.getY();
                         justTouched = 0;
+                        isTouching = true;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         x = event.getX();
                         y = event.getY();
+                        isTouching = true;
                         break;
                     case MotionEvent.ACTION_UP:
                         x = event.getX();
                         y = event.getY();
+                        isTouching = false;
                         break;
                 }
                 return true;

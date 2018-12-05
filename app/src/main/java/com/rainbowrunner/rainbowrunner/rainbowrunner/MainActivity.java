@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mainThread = new Thread() {
             public void run() {
                 while (mainThread.isAlive()) {
-                    long bob = System.currentTimeMillis();
+                    long prevMillis = System.currentTimeMillis();
                     try {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -41,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
                                 Touch.justTouched ++;
                             }
                         });
-                        if(bob - System.currentTimeMillis() + 30 > 0) {
-                            Thread.sleep(bob - System.currentTimeMillis() + 30);
+                        long waitTime = prevMillis - System.currentTimeMillis() + 30;
+                        if(waitTime > 0) {
+                            Thread.sleep(waitTime);
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
